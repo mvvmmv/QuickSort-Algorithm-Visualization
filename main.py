@@ -157,7 +157,7 @@ def partition(array, startIndex, endIndex):
             move_comparing_objects_up_down()
 
             # Replacing circles
-            functions.move_circle_with_text_by_arc(
+            functions.replace_circles_with_text_by_arc(
                 root, canvas, settings, pivotIndex, i, circle_instances, text_instances)
 
             buttonNext.wait_variable(buttonVar)
@@ -192,7 +192,7 @@ def partition(array, startIndex, endIndex):
     # Reset comparing elements positions
     move_comparing_objects_up_down()
 
-    functions.move_circle_with_text_by_arc(
+    functions.replace_circles_with_text_by_arc(
         root, canvas, settings, pivotIndex,
         endIndex+1, circle_instances, text_instances)
 

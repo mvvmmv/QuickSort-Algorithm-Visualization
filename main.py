@@ -1,10 +1,5 @@
 from tkinter import Canvas, Label, Tk, Text, messagebox, IntVar, Button
-
-import math
-from time import sleep
 import re
-from collections import Counter
-
 from elementCircle import ElementCircle
 from textCircle import TextCircle
 from settings import Settings
@@ -28,7 +23,7 @@ def validation_of_user_input(uInput):
 
 
 def initialize():
-    '''Gets user input, checks it, initializes the array and starts quicksort'''
+    '''Gets user input, checks it, initializes the array, starts quicksort'''
 
     # Get user's input
     ui = usersInput.get("1.0", 'end-1c')
@@ -75,8 +70,8 @@ def initialize():
 
 
 def quicksort(array, startIndex, endIndex):
-    '''Finds pivot element, 
-    calls itself recursively for the array on the left side from pivot 
+    '''Finds pivot element,
+    calls itself recursively for the array on the left side from pivot
     and for the array on the right side of pivot'''
 
     buttonNext.wait_variable(buttonVar)
@@ -115,8 +110,9 @@ def quicksort(array, startIndex, endIndex):
 def partition(array, startIndex, endIndex):
     '''Finds pivot element'''
 
-    labelInfo.configure(text='Searching for Pivot element in array from %d to %d indexes' % (
-        startIndex, endIndex+1))
+    labelInfo.configure(
+        text='Searching for Pivot element in array from %d to %d indexes' %
+        (startIndex, endIndex+1))
 
     circle_instances = ElementCircle.instances
     text_instances = TextCircle.instances
@@ -150,15 +146,20 @@ def partition(array, startIndex, endIndex):
             array[i] = array[pivotIndex]
             array[pivotIndex] = u
 
-            labelInfo.configure(
-                text="Element %d less(or equal) than %d element. Replacing %d element with Pivot" % (i, endIndex+1, i))
+            text1 = "Element %d less(or equal) than %d element. " % \
+                (i, endIndex+1)
+            text2 = "Replacing %d element with Pivot" % i
+            text = text1 + text2
+
+            labelInfo.configure(text=text)
 
             # Reset all elements positions before replacement
             move_comparing_objects_up_down()
 
             # Replacing circles
             functions.replace_circles_with_text_by_arc(
-                root, canvas, settings, pivotIndex, i, circle_instances, text_instances)
+                root, canvas, settings, pivotIndex, i,
+                circle_instances, text_instances)
 
             buttonNext.wait_variable(buttonVar)
 
@@ -177,7 +178,9 @@ def partition(array, startIndex, endIndex):
     # Change pivot color
     circle_change_color(pivotIndex, settings.TEMP_PIVOT_COLOR)
 
-    labelInfo.configure(text="End of search. Replacing Pivot %d with last element %d" % (pivotIndex, endIndex+1))
+    labelInfo.configure(
+        text="End of search. Replacing Pivot %d with last element %d" %
+        (pivotIndex, endIndex+1))
 
     # replacing pivot and end elements
     u = array[pivotIndex]

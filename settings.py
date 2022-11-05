@@ -25,5 +25,4 @@ class Settings():
 
     def getInitXCoord(self, index):
         '''Calculates initial X coordinate of the circle'''
-        
         return self.SHIFT_X_NEW+index*self.DISTANCE_BETWEEN_CIRCLES

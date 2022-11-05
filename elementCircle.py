@@ -8,7 +8,7 @@ class ElementCircle:
 
     def __init__(self, canvas, settings, x, y, init_color):
         '''Initialize the circle element'''
-        
+
         self.canvas = canvas
         self.circle_id = canvas.create_oval(x,
                                             y,

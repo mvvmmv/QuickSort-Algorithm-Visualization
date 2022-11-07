@@ -142,9 +142,7 @@ def partition(array, startIndex, endIndex):
         if array[i] <= array[endIndex+1]:
 
             # replacing element and pivot
-            u = array[i]
-            array[i] = array[pivotIndex]
-            array[pivotIndex] = u
+            array[i], array[pivotIndex] = array[pivotIndex], array[i]
 
             text1 = "Element %d less(or equal) than %d element. " % \
                 (i, endIndex+1)
@@ -183,9 +181,7 @@ def partition(array, startIndex, endIndex):
         (pivotIndex, endIndex+1))
 
     # replacing pivot and end elements
-    u = array[pivotIndex]
-    array[pivotIndex] = array[endIndex+1]
-    array[endIndex+1] = u
+    array[pivotIndex], array[endIndex+1] = array[endIndex+1], array[pivotIndex]
 
     buttonNext.wait_variable(buttonVar)
 
@@ -253,12 +249,17 @@ def reset():
 
     circle_instances = ElementCircle.instances
     text_instances = TextCircle.instances
+    pivot_instances = ElementCircle.pivots
 
     # Delete circle and text objects
     while circle_instances:
         del circle_instances[0]
         del text_instances[0]
-
+        
+    # Delete pivot objects
+    while pivot_instances:
+        del pivot_instances[0]
+        
     # Clear the label
     labelInfo.configure(text='')
 

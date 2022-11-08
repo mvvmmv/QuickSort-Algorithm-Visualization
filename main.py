@@ -9,17 +9,7 @@ settings = Settings()
 
 root = Tk()
 root.configure(background=settings.BACKGROUND_COLOR)
-root.title("QuickSort Algorithm")
-
-
-def validation_of_user_input(uInput):
-    '''Validate length of user's input'''
-
-    if len(uInput) > 10:
-        messagebox.showinfo(
-            'Error', 'No more than 10 elements allowed')
-        return False
-    return True
+root.title("QuickSort Algorithm visualization")
 
 
 def initialize():
@@ -29,12 +19,12 @@ def initialize():
     ui = usersInput.get("1.0", 'end-1c')
 
     # Input should include only digits, no more than 10 numbers.
-    # Getting rid of commas, spaces and letters
-    ui = re.split(' |,|[a-zA-Z]', ui)
+    # Getting rid of symbold that are not numbers
+    ui = re.split(r'\D', ui)
     ui = [element for element in ui if element != '']
 
     # If the input is valid
-    if validation_of_user_input(ui):
+    if functions.length_less_than_10(ui):
 
         A = ui
         array_length = len(A)
@@ -123,7 +113,8 @@ def partition(array, startIndex, endIndex):
     pivotIndex = startIndex
 
     # Change pivot color
-    circle_change_color(pivotIndex, settings.TEMP_PIVOT_COLOR)
+    functions.circle_change_color(
+        root, settings, pivotIndex, settings.TEMP_PIVOT_COLOR)
     labelInfo.configure(text="Let's put for Pivot %d element" % pivotIndex)
 
     for i in range(startIndex, endIndex+1):
@@ -135,7 +126,9 @@ def partition(array, startIndex, endIndex):
             text="Let's compare %d and %d elements" % (i, endIndex+1))
 
         # Shift comparing elements up
-        move_comparing_objects_up_down(i, endIndex+1, -settings.SHIFT)
+        functions.move_comparing_objects_up_down(
+            root, settings, circle_instances, text_instances,
+            i, endIndex+1, -settings.SHIFT)
 
         buttonNext.wait_variable(buttonVar)
 
@@ -152,7 +145,8 @@ def partition(array, startIndex, endIndex):
             labelInfo.configure(text=text)
 
             # Reset all elements positions before replacement
-            move_comparing_objects_up_down()
+            functions.move_comparing_objects_up_down(
+                root, settings, circle_instances, text_instances)
 
             # Replacing circles
             functions.replace_circles_with_text_by_arc(
@@ -164,17 +158,20 @@ def partition(array, startIndex, endIndex):
             # taking next element as the pivot
             pivotIndex += 1
 
-            circle_change_color(pivotIndex, settings.TEMP_PIVOT_COLOR)
+            functions.circle_change_color(
+                root, settings, pivotIndex, settings.TEMP_PIVOT_COLOR)
             labelInfo.configure(
                 text="Let's put for Pivot %d element" % pivotIndex)
 
         # Reset all elements positions
-        move_comparing_objects_up_down()
+        functions.move_comparing_objects_up_down(
+            root, settings, circle_instances, text_instances)
 
     buttonNext.wait_variable(buttonVar)
 
     # Change pivot color
-    circle_change_color(pivotIndex, settings.TEMP_PIVOT_COLOR)
+    functions.circle_change_color(
+        root, settings, pivotIndex, settings.TEMP_PIVOT_COLOR)
 
     labelInfo.configure(
         text="End of search. Replacing Pivot %d with last element %d" %
@@ -186,10 +183,11 @@ def partition(array, startIndex, endIndex):
     buttonNext.wait_variable(buttonVar)
 
     # Reset pivot color
-    circle_change_color()
+    functions.circle_change_color(root, settings)
 
     # Reset comparing elements positions
-    move_comparing_objects_up_down()
+    functions.move_comparing_objects_up_down(
+        root, settings, circle_instances, text_instances)
 
     functions.replace_circles_with_text_by_arc(
         root, canvas, settings, pivotIndex,
@@ -198,46 +196,9 @@ def partition(array, startIndex, endIndex):
     ElementCircle.pivots.append(pivotIndex)
 
     # Reset colors
-    circle_change_color()
+    functions.circle_change_color(root, settings)
 
     return pivotIndex
-
-
-def move_comparing_objects_up_down(circle1=None, circle2=None, shift=None):
-    '''resets all circles locations to init and shift only circle1 and circle2
-    If no input parameters - reset to initial position'''
-
-    circle_instances = ElementCircle.instances
-    text_instances = TextCircle.instances
-
-    for index in range(0, len(circle_instances)):
-        functions.move_circle_to_init(
-            root, settings, index, circle_instances, text_instances)
-
-    if shift:
-        functions.move_circle_with_text_up_down(
-            root, settings, circle1, shift, circle_instances, text_instances)
-        functions.move_circle_with_text_up_down(
-            root, settings, circle2, shift, circle_instances, text_instances)
-
-
-def circle_change_color(circle=None, color=None):
-    '''changes color of circle defined by index to <color>,
-    rest of colors changes back to inintial
-    If no input parameters - reset colors for all'''
-
-    circle_instances = ElementCircle.instances
-
-    for index in range(0, len(circle_instances)):
-        circle_instances[index].set_color(settings.INIT_COLOR)
-
-    for index in ElementCircle.pivots:
-        circle_instances[index].set_color(settings.PIVOT_COLOR)
-
-    if color:
-        circle_instances[circle].set_color(color)
-
-    root.update()
 
 
 def reset():
@@ -255,11 +216,11 @@ def reset():
     while circle_instances:
         del circle_instances[0]
         del text_instances[0]
-        
+
     # Delete pivot objects
     while pivot_instances:
         del pivot_instances[0]
-        
+
     # Clear the label
     labelInfo.configure(text='')
 

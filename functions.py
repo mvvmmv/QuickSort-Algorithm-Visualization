@@ -1,5 +1,7 @@
 import math
 import time
+import tkinter.messagebox
+from elementCircle import ElementCircle
 
 
 def get_list_of_coordinates_for_arcs(start_x, start_y, end_x, end_y, step=5):
@@ -110,4 +112,48 @@ def move_circle_to_init(root, settings, circleIndex, circle_array, text_array):
     text_array[circleIndex].move(
         settings.getInitXCoord(circleIndex)+settings.CIRCLE_WIDTH//2,
         settings.INIT_CIRCLE_Y+settings.CIRCLE_HEIGHT//2)
+    root.update()
+
+
+def length_less_than_10(uInput):
+    '''Validate length of user's input'''
+
+    if len(uInput) > 10:
+        tkinter.messagebox.showinfo(
+            'Error', 'No more than 10 elements allowed')
+        return False
+    return True
+
+
+def move_comparing_objects_up_down(root, settings, circle_instances, text_instances, circle1=None, circle2=None, shift=None):
+    '''resets all circles locations to init and shift only circle1 and circle2
+    If no input parameters - reset to initial position'''
+
+    for index in range(0, len(circle_instances)):
+        move_circle_to_init(
+            root, settings, index, circle_instances, text_instances)
+
+    if shift:
+        move_circle_with_text_up_down(
+            root, settings, circle1, shift, circle_instances, text_instances)
+        move_circle_with_text_up_down(
+            root, settings, circle2, shift, circle_instances, text_instances)
+
+
+def circle_change_color(root, settings, circle=None, color=None):
+    '''changes color of circle defined by index to <color>,
+    rest of colors changes back to inintial
+    If no input parameters - reset colors for all'''
+    
+    circle_instances = ElementCircle.instances
+
+    for index in range(0, len(circle_instances)):
+        circle_instances[index].set_color(settings.INIT_COLOR)
+
+    for index in ElementCircle.pivots:
+        circle_instances[index].set_color(settings.PIVOT_COLOR)
+
+    if color:
+        circle_instances[circle].set_color(color)
+
     root.update()

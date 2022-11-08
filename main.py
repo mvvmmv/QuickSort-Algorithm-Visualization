@@ -132,7 +132,7 @@ def partition(array, startIndex, endIndex):
 
         buttonNext.wait_variable(buttonVar)
 
-        if array[i] <= array[endIndex+1]:
+        if int(array[i]) <= int(array[endIndex+1]):
 
             # replacing element and pivot
             array[i], array[pivotIndex] = array[pivotIndex], array[i]
